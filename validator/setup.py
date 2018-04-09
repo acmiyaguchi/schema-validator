@@ -15,5 +15,5 @@ setup(
     description='Spark schema validation job',
     url='https://github.com/acmiyaguchi/mozschema-validator',
     packages=['mozvalidator'],
-    package_dir={'mozvalidator': 'src'},
+    package_dir={'mozvalidator': 'mozvalidator'},
 )

@@ -13,7 +13,7 @@ class SchemaValidator:
         return self.spark.createDataFrame([{}])
 
 
-def validate_ping(ping, schema):
+def _validate_ping(ping, schema):
     errors = []
 
     validator = jsonschema.Draft4Validator(schema)
@@ -45,8 +45,8 @@ def validate(rdd, schema):
         # associate each error with attribute data
         .flatMap(
             lambda x: list(
-                zip(itertools.repeat((x["meta"]["documentId"])),
-                    validate_ping(x, schema))
+                zip(itertools.repeat((x["meta"]["documentId"],)),
+                    _validate_ping(x, schema))
                 )
         )
         .map(lambda x: x[0] + x[1])
@@ -66,8 +66,9 @@ def summarize(validation, top_n=10):
 
     total = (
         validation
-        .groupBy()
-        .agg(F.countDistinct("document_id").alias("total_count"))
+        .select("document_id")
+        .distinct()
+        .count()
     )
 
     rollup = (
@@ -83,7 +84,7 @@ def summarize(validation, top_n=10):
     summary = {
         "success": success,
         "total": total,
-        "rollup": map(lambda x: x.asDict, rollup)
+        "rollup": [row.asDict() for row in rollup]
     }
 
     return summary
