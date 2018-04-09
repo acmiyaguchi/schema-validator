@@ -1,0 +1,14 @@
+# ide files
+.idea/
+
+# spark-shell files
+metastore_db/
+derby.log
+
+# python packaging
+*.egg-info/
+build/
+dist/
+
+# python testing
+.pytest_cache/
