@@ -1,16 +1,20 @@
 import itertools
+import json
 
 import jsonschema
 from pyspark.sql import functions as F
 from pyspark.sql.types import StructType, StructField, StringType
 
 
-class SchemaValidator:
-    def __init__(self, spark):
-        self.spark = spark
+def extract(spark, source):
+    """Return an RDD[String]."""
+    rdd = spark.sparkContext.textFile(source)
+    return rdd.map(lambda x: json.loads(x))
 
-    def extract(self, submission_date, sample=1.0):
-        return self.spark.createDataFrame([{}])
+
+def load(bucket, tablename, dataframe):
+    path = "{}/{}".format(bucket, tablename)
+    dataframe.write.parquet(path, mode="overwrite")
 
 
 def _validate_ping(ping, schema):
