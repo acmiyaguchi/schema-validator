@@ -1,0 +1,29 @@
+version: '2'
+
+services:
+  redis:
+    image: redis:alpine
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    restart: always
+    volumes:
+      - $PWD:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis
+    command: python run.py
+
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    volumes:
+      - $PWD:/app
+    depends_on:
+      - redis
+    command: celery worker -A service.celery --loglevel=info
+
