@@ -5,7 +5,9 @@
 metastore_db/
 derby.log
 
-# python packaging
+# python
+*.pyc
+__pycache__/
 *.egg-info/
 build/
 dist/
