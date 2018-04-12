@@ -11,10 +11,12 @@ services:
     restart: always
     volumes:
       - $PWD:/app
+      - $PWD/validator/tests/data:/mnt/data
     ports:
       - "8000:8000"
     depends_on:
       - redis
+      - spark
     command: python run.py
 
   worker:
@@ -27,3 +29,20 @@ services:
       - redis
     command: celery worker -A service.celery --loglevel=info
 
+  spark:
+    build:
+      context: ./validator
+    command: bin/bootstrap.sh
+    hostname: master
+    environment:
+      MASTER: spark://master:7077
+      #SPARK_CONF_DIR: /conf
+      #SPARK_PUBLIC_DNS: localhost
+    expose:
+      - 6066
+      - 7077
+    ports:
+      - "8080:8080"
+    volumes:
+      # - $PWD/conf/master:/conf
+      - $PWD/validator/tests/data:/mnt/data

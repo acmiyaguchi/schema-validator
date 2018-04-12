@@ -8,6 +8,4 @@ COPY . /app
 
 RUN pipenv install --system --deploy
 
-WORKDIR $SPARK_HOME
-
-CMD ["sbin/start-all.sh"]
+CMD ["bin/bootstrap.sh"]
