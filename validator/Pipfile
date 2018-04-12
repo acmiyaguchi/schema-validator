@@ -4,15 +4,14 @@ verify_ssl = true
 name = "pypi"
 
 [dev-packages]
+pyspark = "*"
 pytest = "*"
 pytest-runner = "*"
 pytest-flake8 = "*"
 
 [packages]
-pyspark = "*"
 click = "*"
 jsonschema = "*"
-"pytest-flake8" = "*"
 
 [requires]
 python_version = "3.6"

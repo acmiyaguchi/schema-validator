@@ -14,6 +14,11 @@ setup(
     author_email='amiyaguchi@mozilla.com',
     description='Spark schema validation job',
     url='https://github.com/acmiyaguchi/mozschema-validator',
+    install_requires=[
+        "pyspark",
+        "click",
+        "jsonschema",
+    ],
     packages=['mozvalidator'],
     package_dir={'mozvalidator': 'mozvalidator'},
 )

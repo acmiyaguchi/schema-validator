@@ -1,0 +1,9 @@
+{
+  "type": "object",
+  "properties": {
+    "meta": {"documentId": "string"},
+    "foo": {"type": "integer"},
+    "bar": {"type": "boolean"}
+  },
+  "required": ["foo", "bar"]
+}

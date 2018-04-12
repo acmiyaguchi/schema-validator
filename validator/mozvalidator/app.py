@@ -35,6 +35,9 @@ def main(schema_name, input_path, output_path, protocol):
     input_path = "{}://{}".format(protocol, input_path)
     output_path = "{}://{}".format(protocol, output_path)
 
+    print(input_path)
+    print(output_path)
+
     ping_rdd = validator.extract(spark, input_path)
     validation_df = validator.validate(ping_rdd, schema)
     summary_dict = validator.summarize(validation_df)
