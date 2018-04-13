@@ -36,7 +36,7 @@ echo "test data directory is mounted on /mnt/data"
 docker exec -it $web_container \
     spark-submit \
         --master spark://spark:7077 \
-        --py-files validator/dist/mozschema_validator-0.0.1-py3.6.egg \
+        --py-files validator/dist/validator-0.1.0-py3.6.egg \
         --files /mnt/data/input/test.schema.json \
         validator/bin/run.py \
             --schema-name test.schema.json \

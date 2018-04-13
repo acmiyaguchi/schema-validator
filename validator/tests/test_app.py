@@ -4,7 +4,7 @@ import os
 import pyspark
 import pytest
 from click.testing import CliRunner
-from mozvalidator import app
+from validator import app
 
 
 @pytest.fixture(autouse=True)

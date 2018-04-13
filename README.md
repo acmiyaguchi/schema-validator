@@ -1,6 +1,6 @@
-# mozschema-validator
+# schema-validator
 
-A continuous integration service for Mozilla pipeline schemas.
+A continuous integration service for schema validation.
 
 # Usage
 

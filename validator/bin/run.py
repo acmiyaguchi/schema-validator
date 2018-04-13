@@ -1,3 +1,3 @@
-from mozvalidator import app
+from validator import app
 
 app.main()

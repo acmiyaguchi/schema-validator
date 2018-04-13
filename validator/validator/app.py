@@ -15,9 +15,10 @@ spark-submit \
 import json
 
 import click
-from mozvalidator import validator
 from pyspark.files import SparkFiles
 from pyspark.sql import SparkSession
+
+from . import validator
 
 
 @click.command()

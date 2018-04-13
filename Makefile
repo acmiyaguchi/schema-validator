@@ -1,7 +1,7 @@
 .PHONY: build clean redis-cli run shell stop up test
 
 help:
-	@echo "Welcome to the mozschema\n"
+	@echo "Welcome to the schema validation service\n"
 	@echo "The list of commands for local development:\n"
 	@echo "  build      Builds the docker images for the docker-compose setup"
 	@echo "  clean      Stops and removes all docker containers"

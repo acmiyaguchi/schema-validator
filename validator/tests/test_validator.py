@@ -1,5 +1,5 @@
 import pytest
-from mozvalidator import validator
+from validator import validator
 
 
 @pytest.fixture
