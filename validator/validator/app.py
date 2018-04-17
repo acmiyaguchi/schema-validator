@@ -15,7 +15,6 @@ spark-submit \
 import json
 
 import click
-from pyspark.files import SparkFiles
 from pyspark.sql import SparkSession
 
 from . import validator
@@ -30,8 +29,8 @@ def main(schema_name, input_path, output_path, protocol):
     spark = SparkSession.builder.appName("schema_validator").getOrCreate()
 
     # TODO: logging
-    with open(SparkFiles.get(schema_name), 'r') as f:
-        schema = json.load(f)
+    lines = spark.sparkContext.textFile(schema_name).collect()
+    schema = json.loads("".join(lines))
 
     input_path = "{}://{}".format(protocol, input_path)
     output_path = "{}://{}".format(protocol, output_path)
