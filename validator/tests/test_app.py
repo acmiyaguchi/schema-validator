@@ -31,11 +31,12 @@ def test_request_success(spark, tmpdir):
     output_dir = tmpdir.mkdir("output")
 
     # equivalent of spark-submit's `--files` option
-    spark.sparkContext.addFile(str(input_dir.join(schema_name)))
+    schema_path = str(input_dir.join(schema_name))
+    spark.sparkContext.addFile(schema_path)
 
     runner = CliRunner()
     result = runner.invoke(app.main, [
-        "--schema-name", schema_name,
+        "--schema-name", schema_path,
         '--input-path',  str(input_dir.join(data_name)),
         "--output-path", str(output_dir),
         "--protocol", "file"
