@@ -1,9 +1,12 @@
-import shutil
+import json
 import os
+import shutil
+import traceback
 
 import pyspark
 import pytest
 from click.testing import CliRunner
+
 from validator import app
 
 
@@ -30,18 +33,20 @@ def test_request_success(spark, tmpdir):
 
     output_dir = tmpdir.mkdir("output")
 
-    # equivalent of spark-submit's `--files` option
-    schema_path = str(input_dir.join(schema_name))
-    spark.sparkContext.addFile(schema_path)
-
     runner = CliRunner()
     result = runner.invoke(app.main, [
-        "--schema-name", schema_path,
+        "--schema-path", str(input_dir.join(schema_name)),
         '--input-path',  str(input_dir.join(data_name)),
         "--output-path", str(output_dir),
         "--protocol", "file"
     ])
 
-    assert result.exit_code == 0
+    if result.exit_code != 0:
+        traceback.print_tb(result.exc_info[2])
+        assert False
 
     assert output_dir.join("validation", "_SUCCESS").check()
+
+    with open(output_dir.join("response.json"), 'r') as f:
+        result = json.load(f)
+    assert result['success'] == 3
