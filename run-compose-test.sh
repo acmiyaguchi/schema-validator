@@ -2,18 +2,14 @@
 
 set eou -pipefail
 
-# make sure all running containers are down
-make clean
-
 pushd .
 cd validator
 pipenv run python setup.py bdist_egg
 popd
 
-# rebuild the current docker containers
-make build
-make up &
+make clean && make build
 
+make up &
 make_up_pid=$!
 
 function cleanup {
@@ -24,35 +20,38 @@ trap cleanup EXIT
 
 # wait until the services come online
 timeout=1
-web_container=""
-while [[ -z $web_container ]]; do
-    web_container=`docker ps | grep _web | awk '{print $1}'`
+worker_container=""
+while [[ -z $worker_container ]]; do
+    worker_container=`docker ps | grep _worker | head -n1 | awk '{print $1}'`
     sleep $timeout
     timeout=$(( $timeout * 2 ))
 done
 
 echo "test data directory is mounted on /mnt/data"
 
-docker exec -it $web_container \
+docker exec -it $worker_container \
     spark-submit \
         --master spark://spark:7077 \
-        --py-files validator/dist/validator-0.1.0-py3.6.egg \
-        --files /mnt/data/input/test.schema.json \
+        --py-files /app/validator/dist/*.egg \
         validator/bin/run.py \
-            --schema-name test.schema.json \
+            --schema-path /mnt/data/input/test.schema.json \
             --input-path /mnt/data/input/test.success.json.txt \
             --output-path /mnt/data/output
 
-output=`docker exec -it $web_container \
+validation=`docker exec -it $worker_container \
     stat /mnt/data/output/validation/_SUCCESS > /dev/null && \
     echo $?`
+response=`docker exec -it $worker_container \
+    stat /mnt/data/output/response.json > /dev/null && \
+    echo $?`
 
+# TODO: clear output and test json
 
 # clean-up and then print results
 function test_results {
     cleanup
 
-    if [[ $output -eq 0 ]]; then
+    if [[ $output -eq 0 && $response -eq 0 ]]; then
         echo "Test succeeded"
     else
         echo "Test failed"
