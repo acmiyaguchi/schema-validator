@@ -12,6 +12,7 @@ help:
 	@echo "  test       Run a simple integration test"
 
 build:
+	cd validator && pipenv run python setup.py bdist_egg
 	docker-compose build
 
 clean: stop

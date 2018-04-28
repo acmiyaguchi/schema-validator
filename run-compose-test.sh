@@ -2,11 +2,6 @@
 
 set eou -pipefail
 
-pushd .
-cd validator
-pipenv run python setup.py bdist_egg
-popd
-
 make clean && make build
 
 make up &
