@@ -1,21 +1,50 @@
 #!/usr/bin/env bash
 
-# assumes that the service is running on localhost:8000
+max_retries=5
+base_uri="localhost:8000"
 schema_id=test.schema.json
 dataset_id=test.success.json.txt
 
-resp=`curl --silent -X POST "localhost:8000/submit?schema_id=${schema_id}&dataset_id=${dataset_id}"`
+# if the setup is run, then also run the cleanup
+function setup {
+    make clean && make build
+    make up &
+    make_up_pid=$!
+
+    function cleanup {
+        kill $make_up_pid
+        make clean
+    }
+    trap cleanup EXIT
+}
+
+
+resp=`curl --silent "${base_uri}/__heartbeat__"`
+if [[ $resp != "OK" ]]; then
+    setup
+
+    timeout=6
+    retries=0
+    while [[ `curl --silent "${base_uri}/__heartbeat__"` != "OK" && $retries -lt $max_retries ]]; do
+        sleep $timeout
+        retries=$(( $retries + 1 ))
+    done
+
+fi
+
+resp=`curl --silent -X POST "${base_uri}/submit?schema_id=${schema_id}&dataset_id=${dataset_id}"`
 task_id=`echo $resp | jq -r .task_id`
 
 echo "polling state for $task_id"
 
-#TODO: max retries
 timeout=15
 state="{\"state\": \"PENDING\"}"
-while [[ `echo "$state" | jq -r .state` == "PENDING" ]]; do
-    state=`curl --silent "localhost:8000/status/${task_id}"`
+retries=0
+while [[ `echo "$state" | jq -r .state` == "PENDING" && $retries -lt $max_retries ]]; do
+    state=`curl --silent "${base_uri}/status/${task_id}"`
     echo "polled state:" $state
     sleep $timeout
+    retries=$(( $retries + 1 ))
 done
 
 if [[ `echo "$state" | jq -r .result.success` -eq 3 ]]; then

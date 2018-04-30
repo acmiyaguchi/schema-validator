@@ -1,3 +1,5 @@
+import json
+
 from flask import request, jsonify, url_for
 
 from . import app
@@ -29,9 +31,9 @@ def task_status(task_id):
     if task.state == 'PENDING':
         pass
     elif task.state != 'FAILURE':
-        response['result'] = task.info
+        response['result'] = json.loads(task.info)
     else:
-        response['result'] = task.info
+        response['result'] = json.loads(task.info)
     return jsonify(response)
 
 
