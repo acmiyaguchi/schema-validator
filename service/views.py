@@ -1,9 +1,15 @@
 import json
+import os
 
 from flask import request, jsonify, url_for
 
 from . import app
 from .tasks import spark_submit
+
+
+version_path = os.path.join(os.path.dirname(__file__), "version.json")
+with open(version_path, "r") as f:
+    VERSION_METADATA = json.load(f)
 
 
 @app.route('/')
@@ -39,8 +45,7 @@ def task_status(task_id):
 
 @app.route('/__version__')
 def version():
-    # TODO: add a version object to the project
-    return "OK", 200
+    return jsonify(VERSION_METADATA), 200
 
 
 @app.route('/__heartbeat__')
