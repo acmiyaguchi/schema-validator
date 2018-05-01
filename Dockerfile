@@ -6,8 +6,9 @@ ENV PYTHONUNBUFFERED=1 \
 
 EXPOSE $PORT
 
+# TODO: because of local file directory permissions with spark, this user is not active
 RUN groupadd --gid 10001 app && \
-    useradd --gid 10001 --uid 10001 --home-dir /app app
+    useradd --gid app --uid 10001 --home-dir /app app
 
 # application needs access to `spark-submit`
 # RUN mkdir /usr/share/man/man1/

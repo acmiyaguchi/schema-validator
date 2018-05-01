@@ -7,7 +7,6 @@ services:
   web:
     build:
       context: .
-      dockerfile: Dockerfile.dev
     restart: always
     volumes:
       - $PWD:/app
@@ -20,10 +19,9 @@ services:
   worker:
     build:
       context: .
-      dockerfile: Dockerfile.dev
     volumes:
       - $PWD:/app
-      - $PWD/validator/tests/data:/mnt/data
+      - $PWD/validator/tests/data:/app/data
     depends_on:
       - redis
       - spark
@@ -36,13 +34,10 @@ services:
     hostname: master
     environment:
       MASTER: spark://master:7077
-      #SPARK_CONF_DIR: /conf
-      #SPARK_PUBLIC_DNS: localhost
     expose:
       - 6066
       - 7077
     ports:
       - "8080:8080"
     volumes:
-      # - $PWD/conf/master:/conf
-      - $PWD/validator/tests/data:/mnt/data
+      - $PWD/validator/tests/data:/app/data

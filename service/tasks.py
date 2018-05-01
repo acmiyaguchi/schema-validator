@@ -16,8 +16,8 @@ def spark_submit(schema_id, dataset_id):
 
     # TODO: add logging
     # NOTE: assumes the current working directory is the root
-    input_path = "/mnt/data/input"
-    output_path = "/mnt/data/output"
+    input_path = "/app/data/input"
+    output_path = "/app/data/output"
 
     spark_submit_args = [
         "spark-submit",
@@ -33,7 +33,6 @@ def spark_submit(schema_id, dataset_id):
         "--output-path", output_path
     ]
     command = spark_submit_args + run_args
-    print("".join(command))
     retval = subprocess.call(command)
 
     # result passing via the filesystem

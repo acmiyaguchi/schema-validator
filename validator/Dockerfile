@@ -9,5 +9,4 @@ RUN pip install pipenv && \
 WORKDIR /app
 COPY . /app
 
-
 CMD ["bin/bootstrap.sh"]

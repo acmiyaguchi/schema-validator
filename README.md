@@ -28,10 +28,14 @@ within the `validator` sub-project as standard `pytest` unit and integration tes
 of the project, a micro-service integration test is available.
 
 ```bash
+# only runs the service-level integration tests
 make test
 
 # or without make
-./run-compose-test.sh
+./tests/test-service.sh
+
+# test that docker-compose is working correctly
+./tests/test-compose.sh
 ```
 
 # Architecture
@@ -48,17 +52,10 @@ The service is exposed through the REST api using a Dockerflow compatible config
 
 # Roadmap
 
-The following features are planned for the v0 release.
-
-* Request document-set validation through a REST api
-* Support for manually mounted data volumes using the `file://` protocol
-* Dockerflow compatible
-
-The following features are planned for the v1 release.
+The following features are planned for the v2 release.
 
 * REST interface into the `mozilla-pipeline-schemas` repository
-* Support for maria/postgres using the `jdbc://` protocol
-* Interface into task queue and historical task runs
+* Support for the `s3://` protocol
 
 # Resources
 

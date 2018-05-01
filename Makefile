@@ -32,4 +32,4 @@ up:
 	docker-compose up
 
 test:
-	bash run-compose-test.sh
+	bash tests/test-service.sh

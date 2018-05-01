@@ -2,6 +2,9 @@
 
 set eou -pipefail
 
+# make sure this script is running at the root of the directory
+cd `dirname $0` && cd ..
+
 make clean && make build
 
 make up &
@@ -29,9 +32,9 @@ docker exec -it $worker_container \
         --master spark://spark:7077 \
         --py-files /app/validator/dist/*.egg \
         validator/bin/run.py \
-            --schema-path /mnt/data/input/test.schema.json \
-            --input-path /mnt/data/input/test.success.json.txt \
-            --output-path /mnt/data/output
+            --schema-path /app/data/input/test.schema.json \
+            --input-path /app/data/input/test.success.json.txt \
+            --output-path /app/data/output
 
 validation=`docker exec -it $worker_container \
     stat /mnt/data/output/validation/_SUCCESS > /dev/null && \
