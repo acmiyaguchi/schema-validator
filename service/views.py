@@ -12,11 +12,6 @@ with open(version_path, "r") as f:
     VERSION_METADATA = json.load(f)
 
 
-@app.route('/')
-def hello_world():
-    return 'hello, world'
-
-
 @app.route('/submit', methods=['POST'])
 def submit():
     schema_id = request.args.get('schema_id')
