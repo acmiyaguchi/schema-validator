@@ -1,11 +1,12 @@
 FROM gettyimages/spark:latest
 MAINTAINER Anthony Miyaguchi <amiyaguchi@mozilla.com>
 
-RUN pip install pipenv
+COPY Pipfile Pipfile
+COPY Pipfile.lock Pipfile.lock
+RUN pip install pipenv && \
+    pipenv install --system --deploy
 
 WORKDIR /app
 COPY . /app
-
-RUN pipenv install --system --deploy
 
 CMD ["bin/bootstrap.sh"]
