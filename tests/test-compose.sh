@@ -1,13 +1,13 @@
 #!/bin/bash
 
-set eou -pipefail
+set -eu -o pipefail
 
 # make sure this script is running at the root of the directory
 cd `dirname $0` && cd ..
 
-make clean && make build
+make build
 
-make up &
+docker-compose up &
 make_up_pid=$!
 
 function cleanup {
